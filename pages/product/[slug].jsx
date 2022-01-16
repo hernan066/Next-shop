@@ -10,25 +10,42 @@ import {
   Card,
   Button,
 } from '@material-ui/core';
-import { useRouter } from 'next/router';
-import data from '../../utils/data';
+//import { useRouter } from 'next/router';
+//import data from '../../utils/data';
 import Layout from '../../components/Layout';
 import useStyles from '../../utils/styles';
 import Product from '../../models/Product';
 import db from '../../utils/db';
+import axios from 'axios';
+import { useDispatch } from "react-redux";
+import { addProduct } from '../../redux/cartRedux';
 
 export default function ProductScreen(props) {
   
   const{product} = props;
   
+  const dispatch = useDispatch();
   
   const classes = useStyles();
-  const router = useRouter();
+  //const router = useRouter();
   //const { slug } = router.query;
   //const product = data.products.find((a) => a.slug === slug);
   if (!product) {
     return <div>Product Not Found</div>;
   }
+  
+  const addToCartHandler = async ()=>{
+    const {data} = await axios.get(`/api/products/${product._id}`);
+   console.log(data)
+   
+      dispatch(addProduct({
+       
+      product: product,
+      price: product.price
+    })); 
+  }
+  
+  
   return (
     <Layout title={product.name} description={product.description}>
       <div className={classes.section}>
@@ -97,7 +114,11 @@ export default function ProductScreen(props) {
                 </Grid>
               </ListItem>
               <ListItem>
-                <Button fullWidth variant="contained" color="primary">
+                <Button 
+                fullWidth variant="contained" 
+                color="primary"
+                onClick={addToCartHandler}
+                >
                   Add to cart
                 </Button>
               </ListItem>
@@ -115,6 +136,7 @@ export async function getServerSideProps(context) {
 
   await db.connect();
   const product = await Product.findOne({ slug }).lean();
+  
   await db.disconnect();
   return {
     props: {
