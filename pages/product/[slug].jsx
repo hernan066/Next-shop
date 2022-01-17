@@ -19,11 +19,12 @@ import db from '../../utils/db';
 import axios from 'axios';
 import { useDispatch } from "react-redux";
 import { addProduct } from '../../redux/cartRedux';
+import { useRouter } from 'next/router';
 
 export default function ProductScreen(props) {
   
   const{product} = props;
-  
+  const router = useRouter();
   const dispatch = useDispatch();
   
   const classes = useStyles();
@@ -36,13 +37,17 @@ export default function ProductScreen(props) {
   
   const addToCartHandler = async ()=>{
     const {data} = await axios.get(`/api/products/${product._id}`);
-   console.log(data)
+    if (data.countInStock <= 0) {
+      window.alert('Sorry. Product is out of stock');
+      return;
+    }
    
       dispatch(addProduct({
        
       product: product,
       price: product.price
     })); 
+    router.push('/cart');
   }
   
   
