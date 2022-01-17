@@ -9,20 +9,19 @@ const useStyles = makeStyles({
       marginRight: 10,
     },
   },
-  brand:{
+  brand: {
     fontWeight: 'bold',
     fontSize: '1.5rem',
-    
   },
-  grow:{
-    flexGrow:'1',
+  grow: {
+    flexGrow: 1,
   },
   main: {
     minHeight: '80vh',
   },
   footer: {
+    marginTop: 10,
     textAlign: 'center',
-    marginTop: 20,
   },
   section: {
     marginTop: 10,

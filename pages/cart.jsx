@@ -1,5 +1,7 @@
 import React, { useContext } from 'react';
+import dynamic from 'next/dynamic';
 import Layout from '../components/Layout';
+import { Store } from '../utils/Store';
 import NextLink from 'next/link';
 import Image from 'next/image';
 import {
@@ -19,20 +21,35 @@ import {
   List,
   ListItem,
 } from '@material-ui/core';
-import { useSelector } from 'react-redux';
+import axios from 'axios';
 
-export default function CartScreen() {
-  
-    const {quantity, products, total} = useSelector(state => state.cart)
-
+function CartScreen() {
+  const { state, dispatch } = useContext(Store);
+  const {
+    cart: { cartItems },
+  } = state;
+  const updateCartHandler = async (item, quantity) => {
+    const { data } = await axios.get(`/api/products/${item._id}`);
+    if (data.countInStock < quantity) {
+      window.alert('Sorry. Product is out of stock');
+      return;
+    }
+    dispatch({ type: 'CART_ADD_ITEM', payload: { ...item, quantity } });
+  };
+  const removeItemHandler = (item) => {
+    dispatch({ type: 'CART_REMOVE_ITEM', payload: item });
+  };
   return (
     <Layout title="Shopping Cart">
       <Typography component="h1" variant="h1">
         Shopping Cart
       </Typography>
-      {quantity === 0 ? (
+      {cartItems.length === 0 ? (
         <div>
-          Cart is empty. <NextLink href="/">Go shopping</NextLink>
+          Cart is empty.{' '}
+          <NextLink href="/" passHref>
+            <Link>Go shopping</Link>
+          </NextLink>
         </div>
       ) : (
         <Grid container spacing={1}>
@@ -49,7 +66,7 @@ export default function CartScreen() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {products.map((item) => (
+                  {cartItems.map((item) => (
                     <TableRow key={item._id}>
                       <TableCell>
                         <NextLink href={`/product/${item.slug}`} passHref>
@@ -72,9 +89,14 @@ export default function CartScreen() {
                         </NextLink>
                       </TableCell>
                       <TableCell align="right">
-                        <Select value={1}>
+                        <Select
+                          value={item.quantity}
+                          onChange={(e) =>
+                            updateCartHandler(item, e.target.value)
+                          }
+                        >
                           {[...Array(item.countInStock).keys()].map((x) => (
-                            <MenuItem key={x + 1} value={ x + 1}>
+                            <MenuItem key={x + 1} value={x + 1}>
                               {x + 1}
                             </MenuItem>
                           ))}
@@ -82,7 +104,11 @@ export default function CartScreen() {
                       </TableCell>
                       <TableCell align="right">${item.price}</TableCell>
                       <TableCell align="right">
-                        <Button variant="contained" color="secondary">
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          onClick={() => removeItemHandler(item)}
+                        >
                           x
                         </Button>
                       </TableCell>
@@ -92,15 +118,14 @@ export default function CartScreen() {
               </Table>
             </TableContainer>
           </Grid>
-          <Grid md={3} xs={12}>
+          <Grid item md={3} xs={12}>
             <Card>
               <List>
                 <ListItem>
                   <Typography variant="h2">
-                   {/*  Subtotal ({cartItems.reduce((a, c) => a + c.quantity, 0)}{' '}
+                    Subtotal ({cartItems.reduce((a, c) => a + c.quantity, 0)}{' '}
                     items) : $
-                    {cartItems.reduce((a, c) => a + c.quantity * c.price, 0)} */}
-                    Subtotal ({quantity} items): ${total}
+                    {cartItems.reduce((a, c) => a + c.quantity * c.price, 0)}
                   </Typography>
                 </ListItem>
                 <ListItem>
@@ -116,3 +141,5 @@ export default function CartScreen() {
     </Layout>
   );
 }
+
+export default dynamic(() => Promise.resolve(CartScreen), { ssr: false });

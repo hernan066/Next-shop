@@ -1,25 +1,26 @@
+import React, { useContext } from "react";
+import Head from "next/head";
+import NextLink from "next/link";
 import {
   AppBar,
-  Container,
-  Link,
   Toolbar,
   Typography,
+  Container,
+  Link,
   createTheme,
   ThemeProvider,
   CssBaseline,
+  Switch,
   Badge,
 } from "@material-ui/core";
-
-import Head from "next/head";
-import React from "react";
 import useStyles from "../utils/styles";
-import NextLink from "next/link";
+import { Store } from "../utils/Store";
+import Cookies from "js-cookie";
 import { ShoppingCartOutlined } from "@material-ui/icons";
-import { useSelector } from "react-redux";
 
-const Layout = ({ title, description, children }) => {
-  const { quantity } = useSelector((state) => state.cart);
-
+export default function Layout({ title, description, children }) {
+  const { state, dispatch } = useContext(Store);
+  const { darkMode, cart } = state;
   const theme = createTheme({
     typography: {
       h1: {
@@ -34,7 +35,7 @@ const Layout = ({ title, description, children }) => {
       },
     },
     palette: {
-      type: "light",
+      type: darkMode ? "dark" : "light",
       primary: {
         main: "#f0c000",
       },
@@ -43,9 +44,12 @@ const Layout = ({ title, description, children }) => {
       },
     },
   });
-
   const classes = useStyles();
-
+  const darkModeChangeHandler = () => {
+    dispatch({ type: darkMode ? "DARK_MODE_OFF" : "DARK_MODE_ON" });
+    const newDarkMode = !darkMode;
+    Cookies.set("darkMode", newDarkMode ? "ON" : "OFF");
+  };
   return (
     <div>
       <Head>
@@ -58,15 +62,19 @@ const Layout = ({ title, description, children }) => {
           <Toolbar>
             <NextLink href="/" passHref>
               <Link>
-                <Typography className={classes.brand}>Next-Shop</Typography>
+                <Typography className={classes.brand}>Next Shop</Typography>
               </Link>
             </NextLink>
             <div className={classes.grow}></div>
             <div>
+              <Switch
+                checked={darkMode}
+                onChange={darkModeChangeHandler}
+              ></Switch>
               <NextLink href="/cart" passHref>
                 <Link>
-                  <Badge badgeContent={quantity} color="secondary">
-                    <ShoppingCartOutlined className="nav__icon-carrito" />
+                  <Badge badgeContent={cart.cartItems.length} color="secondary">
+                    <ShoppingCartOutlined />
                   </Badge>
                 </Link>
               </NextLink>
@@ -87,6 +95,4 @@ const Layout = ({ title, description, children }) => {
       </ThemeProvider>
     </div>
   );
-};
-
-export default Layout;
+}
