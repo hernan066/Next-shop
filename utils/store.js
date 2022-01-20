@@ -9,18 +9,24 @@ const initialState = {
       ? JSON.parse(Cookies.get("cartItems"))
       : [],
   },
+  userInfo: Cookies.get('userInfo')
+  ? JSON.parse(Cookies.get('userInfo'))
+  : null,
 };
 
 function reducer(state, action) {
   switch (action.type) {
     
+    //////theme/////////////////////////////////////
     case "DARK_MODE_ON":
       return { ...state, darkMode: true };
 
     case "DARK_MODE_OFF":
       return { ...state, darkMode: false };
 
-    case "CART_ADD_ITEM": {
+    
+    //////cart///////////////////////////////////////
+      case "CART_ADD_ITEM": {
       const newItem = action.payload;
       const existItem = state.cart.cartItems.find(
         (item) => item._id === newItem._id
@@ -41,14 +47,21 @@ function reducer(state, action) {
       Cookies.set("cartItems", JSON.stringify(cartItems));
       return { ...state, cart: { ...state.cart, cartItems } };
     }
+    //////login///////////////////////////////////////
+    case 'USER_LOGIN': {
+      return { ...state, userInfo: action.payload }
+    }
+    case 'USER_LOGOUT': {
+      return { ...state, userInfo: null, cart: { cartItems: [] } }
+    }
 
     default:
       return state;
   }
-}
+};
 
 export function StoreProvider(props) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const value = { state, dispatch };
   return <Store.Provider value={value}>{props.children}</Store.Provider>;
-}
+};

@@ -7,17 +7,36 @@ import {
   Link,
 } from "@material-ui/core";
 import axios from "axios";
+import Cookies from "js-cookie";
 import NextLink from "next/link";
-import React, { useState } from "react";
+import { useRouter } from "next/router";
+import React, { useContext, useEffect, useState } from "react";
 import Layout from "../components/Layout";
+import { Store } from "../utils/Store";
 import useStyles from "../utils/styles";
 
+
 export default function Login() {
+  
+  const router = useRouter();
+  const {redirect} = router.query;
+  
+  const { state, dispatch } = useContext(Store);
+  const { userInfo } = state;
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const classes = useStyles();
 
+  //is logged in
+  useEffect(() => {
+    if (userInfo) {
+      router.push("/");
+    };
+  }, [router, userInfo]);
+  
+  // form sumbit
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
@@ -25,7 +44,12 @@ export default function Login() {
         email,
         password,
       });
-      alert("Successfully logged in!");
+
+      dispatch({type:'USER_LOGIN', payload:data});
+      Cookies.set("userInfo", data);
+      router.push(redirect || '/');
+      
+      
     } catch (err) {
       alert(err.response.data ? err.response.data.message : err.message);
     }
@@ -64,8 +88,8 @@ export default function Login() {
             </Button>
           </ListItem>
           <ListItem>
-            Don't have an account? &nbsp;
-            <NextLink href="/register" passHref>
+            Don t have an account? &nbsp;
+            <NextLink href={`/register?redirect=${redirect || '/'}`} passHref>
               <Link>Register</Link>
             </NextLink>
           </ListItem>
