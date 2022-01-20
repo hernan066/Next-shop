@@ -3,15 +3,23 @@ import { createContext, useReducer } from "react";
 
 export const Store = createContext();
 const initialState = {
+  
   darkMode: Cookies.get("darkMode") === "ON" ? true : false,
+  
   cart: {
     cartItems: Cookies.get("cartItems")
       ? JSON.parse(Cookies.get("cartItems"))
       : [],
+      shippingAddress: Cookies.get('shippingAddress')
+      ? JSON.parse(Cookies.get('shippingAddress'))
+      : {},
   },
+  
   userInfo: Cookies.get('userInfo')
   ? JSON.parse(Cookies.get('userInfo'))
   : null,
+  
+ 
 };
 
 function reducer(state, action) {
@@ -54,14 +62,21 @@ function reducer(state, action) {
     case 'USER_LOGOUT': {
       return { ...state, userInfo: null, cart: { cartItems: [] } }
     }
+    //////shipping///////////////////////////////////////
+    case 'SAVE_SHIPPING_ADDRESS': {
+      return {
+        ...state,
+        cart: { ...state.cart, shippingAddress: action.payload },
+      };
+    }
 
     default:
       return state;
   }
-};
+}
 
 export function StoreProvider(props) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const value = { state, dispatch };
   return <Store.Provider value={value}>{props.children}</Store.Provider>;
-};
+}
