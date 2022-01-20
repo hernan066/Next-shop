@@ -35,5 +35,8 @@ const useStyles = makeStyles({
     color: '#fff',
     textTransform: 'initial',
   },
+  transparentBackgroud:{
+    backgroundColor: 'transparent',
+  }
 });
 export default useStyles;
