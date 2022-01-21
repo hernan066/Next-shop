@@ -24,7 +24,6 @@ import { ShoppingCartOutlined } from "@material-ui/icons";
 import { useState } from "react";
 import { useRouter } from "next/router";
 
-
 export default function Layout({ title, description, children }) {
   const router = useRouter();
 
@@ -103,7 +102,7 @@ export default function Layout({ title, description, children }) {
           <Toolbar>
             <NextLink href="/" passHref>
               <Link>
-                <Typography className={classes.brand}>Next Shop </Typography> 
+                <Typography className={classes.brand}>Next Shop </Typography>
               </Link>
             </NextLink>
             <div className={classes.grow}></div>
@@ -154,6 +153,15 @@ export default function Layout({ title, description, children }) {
                         onChange={darkModeChangeHandler}
                       ></Switch>
                     </MenuItem>
+                    {userInfo.isAdmin && (
+                      <MenuItem
+                        onClick={(e) =>
+                          loginMenuCloseHandler(e, "/admin/dashboard")
+                        }
+                      >
+                        Admin Dashboard
+                      </MenuItem>
+                    )}
 
                     <Divider></Divider>
                     <MenuItem onClick={logoutClickHandler}>Logout</MenuItem>
