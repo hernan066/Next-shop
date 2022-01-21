@@ -15,6 +15,7 @@ import {
   Button,
   Menu,
   MenuItem,
+  Divider,
 } from "@material-ui/core";
 import useStyles from "../utils/styles";
 import { Store } from "../utils/Store";
@@ -22,6 +23,7 @@ import Cookies from "js-cookie";
 import { ShoppingCartOutlined } from "@material-ui/icons";
 import { useState } from "react";
 import { useRouter } from "next/router";
+
 
 export default function Layout({ title, description, children }) {
   const router = useRouter();
@@ -65,7 +67,8 @@ export default function Layout({ title, description, children }) {
 
   const loginMenuCloseHandler = (e, redirect) => {
     setAnchorEl(null);
-    if (redirect) {
+
+    if (redirect && redirect !== "backdropClick") {
       router.push(redirect);
     }
   };
@@ -100,15 +103,11 @@ export default function Layout({ title, description, children }) {
           <Toolbar>
             <NextLink href="/" passHref>
               <Link>
-                <Typography className={classes.brand}>Next Shop</Typography>
+                <Typography className={classes.brand}>Next Shop </Typography> 
               </Link>
             </NextLink>
             <div className={classes.grow}></div>
             <div>
-              <Switch
-                checked={darkMode}
-                onChange={darkModeChangeHandler}
-              ></Switch>
               <NextLink href="/cart" passHref>
                 <Link>
                   <Badge badgeContent={cart.cartItems.length} color="secondary">
@@ -128,22 +127,35 @@ export default function Layout({ title, description, children }) {
                     {userInfo.name}
                   </Button>
                   <Menu
+                    style={{ marginTop: "3rem" }}
                     id="simple-menu"
                     anchorEl={anchorEl}
                     keepMounted
                     open={Boolean(anchorEl)}
                     onClose={loginMenuCloseHandler}
                   >
-                    <MenuItem onClick={(e) => loginMenuCloseHandler(e, "/profile")}>
+                    <MenuItem
+                      onClick={(e) => loginMenuCloseHandler(e, "/profile")}
+                    >
                       Profile
                     </MenuItem>
-                    
+
                     <MenuItem
-                      onClick={(e) =>loginMenuCloseHandler(e, "/order-history")}>
-                    
+                      onClick={(e) =>
+                        loginMenuCloseHandler(e, "/order-history")
+                      }
+                    >
                       Order History
                     </MenuItem>
-                    
+                    <MenuItem>
+                      Dark Theme
+                      <Switch
+                        checked={darkMode}
+                        onChange={darkModeChangeHandler}
+                      ></Switch>
+                    </MenuItem>
+
+                    <Divider></Divider>
                     <MenuItem onClick={logoutClickHandler}>Logout</MenuItem>
                   </Menu>
                 </>
