@@ -58,17 +58,20 @@ export default function Layout({ title, description, children }) {
   });
 
   //////////////////profile menu ////////////////////
-  
+
   const loginClickHandler = (e) => {
     setAnchorEl(e.currentTarget);
   };
 
-  const loginMenuCloseHandler = () => {
+  const loginMenuCloseHandler = (e, redirect) => {
     setAnchorEl(null);
+    if (redirect) {
+      router.push(redirect);
+    }
   };
 
   /////////////////////Logout ///////////////////////
-  
+
   const logoutClickHandler = () => {
     setAnchorEl(null);
     dispatch({ type: "USER_LOGOUT" });
@@ -77,9 +80,8 @@ export default function Layout({ title, description, children }) {
     router.push("/");
   };
 
-  
   ////////////////////////theme//////////////////////
-  
+
   const darkModeChangeHandler = () => {
     dispatch({ type: darkMode ? "DARK_MODE_OFF" : "DARK_MODE_ON" });
     const newDarkMode = !darkMode;
@@ -114,7 +116,7 @@ export default function Layout({ title, description, children }) {
                   </Badge>
                 </Link>
               </NextLink>
-             
+
               {userInfo ? (
                 <>
                   <Button
@@ -132,8 +134,16 @@ export default function Layout({ title, description, children }) {
                     open={Boolean(anchorEl)}
                     onClose={loginMenuCloseHandler}
                   >
-                    <MenuItem onClick={loginMenuCloseHandler}>Profile</MenuItem>
-                    <MenuItem onClick={loginMenuCloseHandler}>My account</MenuItem>
+                    <MenuItem onClick={(e) => loginMenuCloseHandler(e, "/profile")}>
+                      Profile
+                    </MenuItem>
+                    
+                    <MenuItem
+                      onClick={(e) =>loginMenuCloseHandler(e, "/order-history")}>
+                    
+                      Order History
+                    </MenuItem>
+                    
                     <MenuItem onClick={logoutClickHandler}>Logout</MenuItem>
                   </Menu>
                 </>
