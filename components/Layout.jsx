@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Head from "next/head";
 import NextLink from "next/link";
 import {
@@ -16,6 +16,12 @@ import {
   Menu,
   MenuItem,
   Divider,
+  Box,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
 } from "@material-ui/core";
 import useStyles from "../utils/styles";
 import { Store } from "../utils/Store";
@@ -23,6 +29,12 @@ import Cookies from "js-cookie";
 import { ShoppingCartOutlined } from "@material-ui/icons";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import MenuIcon from "@material-ui/icons/Menu";
+//import CancelIcon from '@material-ui/icons/Cancel';
+import CancelPresentationIcon from '@material-ui/icons/CancelPresentation';
+import { useSnackbar } from "notistack";
+import axios from "axios";
+import { getError } from '../utils/error';
 
 export default function Layout({ title, description, children }) {
   const router = useRouter();
@@ -31,6 +43,11 @@ export default function Layout({ title, description, children }) {
   const { darkMode, cart, userInfo } = state;
 
   const [anchorEl, setAnchorEl] = useState(null);
+  const [sidebarVisible, setSidebarVisible] = useState(false);
+  
+  const [categories, setCategories] = useState([]);
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const classes = useStyles();
 
@@ -90,6 +107,30 @@ export default function Layout({ title, description, children }) {
     Cookies.set("darkMode", newDarkMode ? "ON" : "OFF");
   };
 
+  /////////////////Sidebar ///////////////////////
+
+  const sidebarOpenHandler = () => {
+    setSidebarVisible(true);
+  };
+
+  const sidebarCloseHandler = () => {
+    setSidebarVisible(false);
+  };
+
+  /////////////////Fetch categories///////////////////////
+  const fetchCategories = async () => {
+    try {
+      const { data } = await axios.get(`/api/products/categories`);
+      setCategories(data);
+    } catch (err) {
+      enqueueSnackbar(getError(err), { variant: 'error' });
+    }
+  };
+  
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
   return (
     <div>
       <Head>
@@ -100,11 +141,65 @@ export default function Layout({ title, description, children }) {
         <CssBaseline />
         <AppBar position="static" className={classes.navbar}>
           <Toolbar>
-            <NextLink href="/" passHref>
-              <Link>
-                <Typography className={classes.brand}>Next Shop </Typography>
-              </Link>
-            </NextLink>
+            {/* /////////////////Sidebar /////////////////////// */}
+            <Box display="flex" alignItems="center">
+              <IconButton
+                edge="start"
+                aria-label="open drawer"
+                onClick={sidebarOpenHandler}
+              >
+                <MenuIcon className={classes.navbarButton} />
+              </IconButton>
+              <NextLink href="/" passHref>
+                <Link>
+                  <Typography className={classes.brand}>Next Shop </Typography>
+                </Link>
+              </NextLink>
+            </Box>
+            <Drawer
+              anchor="left"
+              open={sidebarVisible}
+              onClose={sidebarCloseHandler}
+            >
+              <List>
+                <ListItem>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <Typography variant="h6">Shopping by category</Typography>
+                    <IconButton
+                      aria-label="close"
+                      onClick={sidebarCloseHandler}
+                    >
+                       <CancelPresentationIcon /> 
+                    </IconButton>
+                  </Box>
+                </ListItem>
+                <Divider light/>
+                
+                {categories.map((category) => (
+                  <NextLink
+                    key={category}
+                    href={`/search?category=${category}`}
+                    passHref
+                  >
+                    <ListItem
+                      button
+                      component="a"
+                      onClick={sidebarCloseHandler}
+                    >
+                      <ListItemText primary={category}></ListItemText>
+                    </ListItem>
+                  </NextLink>
+                ))}
+              
+              </List>
+            </Drawer>
+
+            {/* /////////////////Sidebar end/////////////////////// */}
+
             <div className={classes.grow}></div>
             <div>
               <NextLink href="/cart" passHref>
