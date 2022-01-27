@@ -11,6 +11,7 @@ import NextLink from "next/link";
 import Layout from "../components/Layout";
 import db from "../utils/db";
 import Product from "../models/Product";
+import Rating from '@material-ui/lab/Rating';
 
 
 export default function Home(props) {
@@ -46,6 +47,8 @@ export default function Home(props) {
                   >
                     {product.description}
                   </Typography>
+
+                  <Rating value={product.rating} readOnly></Rating>
                   
                   <Typography variant="h6" >
                     ${product.price}
@@ -65,7 +68,7 @@ export default function Home(props) {
 
 export async function getServerSideProps() {
   await db.connect();
-  const products = await Product.find({}).lean();
+  const products = await Product.find({}, '-reviews').lean();
   await db.disconnect();
   return {
     props: {
