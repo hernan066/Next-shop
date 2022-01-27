@@ -52,7 +52,7 @@ function reducer(state, action) {
   }
 }
 
-function AdminDashboard() {
+function AdminProdcuts() {
   const { state } = useContext(Store);
   const router = useRouter();
   const classes = useStyles();
@@ -143,21 +143,31 @@ function AdminDashboard() {
         <Grid item md={3} xs={12}>
           <Card className={classes.section}>
             <List>
+              
               <NextLink href="/admin/dashboard" passHref>
                 <ListItem button component="a">
                   <ListItemText primary="Admin Dashboard"></ListItemText>
                 </ListItem>
               </NextLink>
+              
               <NextLink href="/admin/orders" passHref>
                 <ListItem button component="a">
                   <ListItemText primary="Orders"></ListItemText>
                 </ListItem>
               </NextLink>
+              
               <NextLink href="/admin/products" passHref>
                 <ListItem selected button component="a">
                   <ListItemText primary="Products"></ListItemText>
                 </ListItem>
               </NextLink>
+
+              <NextLink href="/admin/users" passHref>
+                <ListItem button component="a">
+                  <ListItemText primary="Users"></ListItemText>
+                </ListItem>
+              </NextLink>
+            
             </List>
           </Card>
         </Grid>
@@ -247,4 +257,4 @@ function AdminDashboard() {
   );
 }
 
-export default dynamic(() => Promise.resolve(AdminDashboard), { ssr: false });
+export default dynamic(() => Promise.resolve(AdminProdcuts), { ssr: false });
