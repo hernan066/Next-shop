@@ -54,5 +54,11 @@ const useStyles = makeStyles({
     borderRight: '1px #808080 solid',
     paddingRight: '1rem',
   },
+  mt1: { 
+    marginTop: '1rem' 
+  },
+  sort: {
+    marginRight: 5,
+  },
 });
 export default useStyles;

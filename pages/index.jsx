@@ -1,23 +1,14 @@
-import {
-  Grid,
-  Card,
-  CardActionArea,
-  CardMedia,
-  CardContent,
-  Typography,
- 
-} from "@material-ui/core";
-import NextLink from "next/link";
+import { Grid } from "@material-ui/core";
 import Layout from "../components/Layout";
-import db from "../utils/db";
 import Product from "../models/Product";
-import Rating from '@material-ui/lab/Rating';
+import ProductItem from "../components/ProductItem";
+import db from "../utils/db";
+
 
 
 export default function Home(props) {
-  
   const { products } = props;
-  
+
   return (
     <Layout>
       <div>
@@ -25,39 +16,7 @@ export default function Home(props) {
         <Grid container spacing={3}>
           {products.map((product) => (
             <Grid item md={4} key={product.name}>
-              <Card>
-                <NextLink href={`/product/${product.slug}`} passHref>
-                  <CardActionArea>
-                    <CardMedia
-                      component="img"
-                      image={product.image}
-                      title={product.name}
-                    ></CardMedia>
-                  </CardActionArea>
-                </NextLink>
-                <CardContent>
-                  <Typography  variant="body2" component="p" color="textSecondary">
-                    {product.category}
-                  </Typography>
-                  <Typography
-                    gutterBottom
-                    variant="body2"
-                    color="textPrimary"
-                    component="p"
-                  >
-                    {product.description}
-                  </Typography>
-
-                  <Rating value={product.rating} readOnly></Rating>
-                  
-                  <Typography variant="h6" >
-                    ${product.price}
-                  </Typography>
-                
-                </CardContent>
-
-                
-              </Card>
+              <ProductItem product={product} />
             </Grid>
           ))}
         </Grid>
@@ -68,7 +27,7 @@ export default function Home(props) {
 
 export async function getServerSideProps() {
   await db.connect();
-  const products = await Product.find({}, '-reviews').lean();
+  const products = await Product.find({}, "-reviews").lean();
   await db.disconnect();
   return {
     props: {
