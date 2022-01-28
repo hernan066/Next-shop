@@ -31,10 +31,10 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import MenuIcon from "@material-ui/icons/Menu";
 //import CancelIcon from '@material-ui/icons/Cancel';
-import CancelPresentationIcon from '@material-ui/icons/CancelPresentation';
+import CancelPresentationIcon from "@material-ui/icons/CancelPresentation";
 import { useSnackbar } from "notistack";
 import axios from "axios";
-import { getError } from '../utils/error';
+import { getError } from "../utils/error";
 
 export default function Layout({ title, description, children }) {
   const router = useRouter();
@@ -44,7 +44,7 @@ export default function Layout({ title, description, children }) {
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [sidebarVisible, setSidebarVisible] = useState(false);
-  
+
   const [categories, setCategories] = useState([]);
 
   const { enqueueSnackbar } = useSnackbar();
@@ -123,12 +123,13 @@ export default function Layout({ title, description, children }) {
       const { data } = await axios.get(`/api/products/categories`);
       setCategories(data);
     } catch (err) {
-      enqueueSnackbar(getError(err), { variant: 'error' });
+      enqueueSnackbar(getError(err), { variant: "error" });
     }
   };
-  
+
   useEffect(() => {
     fetchCategories();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -167,18 +168,24 @@ export default function Layout({ title, description, children }) {
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
+                    padding='20px'
                   >
-                    <Typography variant="h6">Shopping by category</Typography>
+                    <Typography className={classes.brand}>
+                      Categories{" "}
+                    </Typography>
+                    {/* <Typography variant="h6">Shopping by category</Typography> */}
                     <IconButton
                       aria-label="close"
                       onClick={sidebarCloseHandler}
+                      style={{ marginLeft: "20px" }}
                     >
-                       <CancelPresentationIcon /> 
+                      <CancelPresentationIcon />
                     </IconButton>
                   </Box>
                 </ListItem>
-                <Divider light/>
-                
+
+                {/* <Typography variant="h6" style={{textAlign: 'center', letterSpacing: '2px' }} >CATEGORIES</Typography> */}
+                <Divider light />
                 {categories.map((category) => (
                   <NextLink
                     key={category}
@@ -189,12 +196,12 @@ export default function Layout({ title, description, children }) {
                       button
                       component="a"
                       onClick={sidebarCloseHandler}
+                      style={{ textAlign: "center" }}
                     >
                       <ListItemText primary={category}></ListItemText>
                     </ListItem>
                   </NextLink>
                 ))}
-              
               </List>
             </Drawer>
 

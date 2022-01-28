@@ -10,8 +10,12 @@ const useStyles = makeStyles({
     },
   },
   brand: {
+    fontFamily: 'Rock Salt', 
     fontWeight: 'bold',
     fontSize: '1.5rem',
+  },
+  logo: {
+    fontFamily: 'Rock Salt', 
   },
   grow: {
     flexGrow: 1,
@@ -27,6 +31,7 @@ const useStyles = makeStyles({
     marginTop: 10,
     marginBottom: 10,
   },
+  
   form: {
     width: '100%',
     maxWidth: 800,

@@ -2,8 +2,10 @@ import nc from 'next-connect';
 import { isAdmin, isAuth } from '../../../../../utils/auth';
 import Product from '../../../../../models/Product';
 import db from '../../../../../utils/db';
+
 const handler = nc();
 handler.use(isAuth, isAdmin);
+
 handler.get(async (req, res) => {
   await db.connect();
   const product = await Product.findById(req.query.id);
@@ -20,6 +22,8 @@ handler.put(async (req, res) => {
     product.price = req.body.price;
     product.category = req.body.category;
     product.image = req.body.image;
+    product.featuredImage = req.body.featuredImage;
+    product.isFeatured = req.body.isFeatured;
     product.brand = req.body.brand;
     product.countInStock = req.body.countInStock;
     product.description = req.body.description;

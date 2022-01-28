@@ -13,4 +13,9 @@ a {
 
 * {
   box-sizing: border-box;
+ 
+  
+}
+.var:hover{
+  font-style: italic;
 }

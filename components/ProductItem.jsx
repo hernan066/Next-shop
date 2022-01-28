@@ -8,16 +8,20 @@ import {
 import React from "react";
 import NextLink from "next/link";
 import Rating from "@material-ui/lab/Rating";
+import useStyles from "../utils/styles";
 
 export default function ProductItem({ product }) {
+  const classes = useStyles();
+  
   return (
-    <Card>
+    <Card  className={classes.cartItems}>
       <NextLink href={`/product/${product.slug}`} passHref>
         <CardActionArea>
           <CardMedia
             component="img"
             image={product.image}
             title={product.name}
+           
           ></CardMedia>
         </CardActionArea>
       </NextLink>
