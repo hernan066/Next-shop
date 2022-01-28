@@ -26,15 +26,16 @@ import {
 import useStyles from "../utils/styles";
 import { Store } from "../utils/Store";
 import Cookies from "js-cookie";
-import { ShoppingCartOutlined } from "@material-ui/icons";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import MenuIcon from "@material-ui/icons/Menu";
-//import CancelIcon from '@material-ui/icons/Cancel';
 import CancelPresentationIcon from "@material-ui/icons/CancelPresentation";
 import { useSnackbar } from "notistack";
 import axios from "axios";
 import { getError } from "../utils/error";
+import { AccountIcon, LetterAvatars, ShoppingCartIcon } from "./Icons";
+
+
 
 export default function Layout({ title, description, children }) {
   const router = useRouter();
@@ -173,7 +174,7 @@ export default function Layout({ title, description, children }) {
                     <Typography className={classes.brand}>
                       Categories{" "}
                     </Typography>
-                    {/* <Typography variant="h6">Shopping by category</Typography> */}
+                    
                     <IconButton
                       aria-label="close"
                       onClick={sidebarCloseHandler}
@@ -184,7 +185,7 @@ export default function Layout({ title, description, children }) {
                   </Box>
                 </ListItem>
 
-                {/* <Typography variant="h6" style={{textAlign: 'center', letterSpacing: '2px' }} >CATEGORIES</Typography> */}
+                
                 <Divider light />
                 {categories.map((category) => (
                   <NextLink
@@ -205,14 +206,16 @@ export default function Layout({ title, description, children }) {
               </List>
             </Drawer>
 
+              
+
             {/* /////////////////Sidebar end/////////////////////// */}
 
             <div className={classes.grow}></div>
-            <div>
+            <div style={{display: 'flex', alignItems: 'center'}}>
               <NextLink href="/cart" passHref>
                 <Link>
                   <Badge badgeContent={cart.cartItems.length} color="secondary">
-                    <ShoppingCartOutlined />
+                    <ShoppingCartIcon />
                   </Badge>
                 </Link>
               </NextLink>
@@ -225,7 +228,8 @@ export default function Layout({ title, description, children }) {
                     onClick={loginClickHandler}
                     className={classes.navbarButton}
                   >
-                    {userInfo.name}
+                   {/*  {userInfo.name} */}
+                   <LetterAvatars name={userInfo.name} />
                   </Button>
                   <Menu
                     style={{ marginTop: "3rem" }}
@@ -270,9 +274,21 @@ export default function Layout({ title, description, children }) {
                   </Menu>
                 </>
               ) : (
-                <NextLink href="/login" passHref>
-                  <Link>Login</Link>
-                </NextLink>
+                 <>
+                 <NextLink href="/login" passHref>
+                  <Link> <AccountIcon/> </Link>
+                </NextLink>  
+                {/*  <Button variant="outlined" color="secondary" onClick={() => router.push("/login")}>
+                 Login
+                </Button> */}
+                 
+                 </>
+
+                 
+
+               
+               
+
               )}
             </div>
           </Toolbar>

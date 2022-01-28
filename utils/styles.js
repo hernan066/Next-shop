@@ -8,6 +8,8 @@ const useStyles = makeStyles({
       marginLeft: 10,
       marginRight: 10,
     },
+    position: 'sticky',
+    top: 0,
   },
   brand: {
     fontFamily: 'Rock Salt', 

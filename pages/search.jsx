@@ -115,7 +115,7 @@ import {
               <ListItem>
                 <Box className={classes.fullWidth}>
                   <Typography>Categories</Typography>
-                  <Select fullWidth value={category} onChange={categoryHandler}>
+                  <Select style={{minWidth: '260px'}} value={category} onChange={categoryHandler}>
                     <MenuItem value="all">All</MenuItem>
                     {categories &&
                       categories.map((category) => (
