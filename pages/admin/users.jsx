@@ -20,7 +20,7 @@ import {
   TableBody,
 } from '@material-ui/core';
 import { getError } from '../../utils/error';
-import { Store } from '../../utils/Store';
+import { Store } from '../../store/Store';
 import Layout from '../../components/Layout';
 import useStyles from '../../utils/styles';
 import { useSnackbar } from 'notistack';

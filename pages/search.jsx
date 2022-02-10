@@ -16,8 +16,7 @@ import {
   import Product from '../models/Product';
   import useStyles from '../utils/styles';
   import ProductItem from '../components/ProductItem';
-  //import { Store } from '../utils/Store';
-  //import axios from 'axios';
+  
   import Rating from '@material-ui/lab/Rating';
   import { Pagination } from '@material-ui/lab';
   

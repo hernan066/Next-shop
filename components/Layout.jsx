@@ -24,7 +24,7 @@ import {
   ListItemText,
 } from "@material-ui/core";
 import useStyles from "../utils/styles";
-import { Store } from "../utils/Store";
+import { Store } from "../store/Store";
 import Cookies from "js-cookie";
 import { useState } from "react";
 import { useRouter } from "next/router";

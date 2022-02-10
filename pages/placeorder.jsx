@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Layout from '../components/Layout';
-import { Store } from '../utils/Store';
+import { Store } from '../store/Store';
 import NextLink from 'next/link';
 import Image from 'next/image';
 import {

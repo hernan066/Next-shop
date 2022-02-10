@@ -2,7 +2,7 @@ import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { SnackbarProvider } from "notistack";
 import { useEffect } from "react";
 import "../styles/globals.css";
-import { StoreProvider } from "../utils/Store";
+import { StoreProvider } from "../store/Store";
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
