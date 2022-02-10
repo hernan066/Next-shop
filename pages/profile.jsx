@@ -40,7 +40,9 @@ function Profile() {
     }
     setValue('name', userInfo.name);
     setValue('email', userInfo.email);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  
   const submitHandler = async ({ name, email, password, confirmPassword }) => {
     closeSnackbar();
     if (password !== confirmPassword) {
